@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Apartment Digital Twin & Virtual Tour</title>
+  <title>Architectural Digital Twin // Real-Texture 3D Apartment</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js & Controls -->
+  <!-- Three.js & OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <!-- Lucide Icons -->
@@ -18,7 +18,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #0d1117;
+      background-color: #0b0f19;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
       color: #f3f4f6;
       user-select: none;
@@ -43,12 +43,12 @@
     .interactive {
       pointer-events: auto;
     }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    .glass-ui {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
     .badge-pulse {
       animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -74,70 +74,68 @@
 <body class="relative">
   <!-- 3D Canvas -->
   <div id="canvas-container"></div>
-
-  <!-- First-Person Aim Reticle (hidden in orbit mode) -->
   <div id="reticle" class="reticle hidden"></div>
 
   <!-- HUD Interface Layer -->
   <div class="hud-layer flex flex-col justify-between p-6">
-    <!-- Top Header: Title, Room Jumpers & Mode Switcher -->
+    <!-- Top Header: Title, Room Jumpers & Lighting -->
     <header class="flex items-center justify-between interactive">
       <!-- Title Card -->
-      <div class="glass-card rounded-2xl px-5 py-3 flex items-center space-x-3.5">
-        <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-          <i data-lucide="home" class="w-4 h-4"></i>
+      <div class="glass-ui rounded-2xl px-5 py-3 flex items-center space-x-3.5">
+        <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+          <i data-lucide="home" class="w-5 h-5"></i>
         </div>
         <div>
           <h1 class="text-sm font-bold tracking-wide text-white flex items-center gap-2">
             <span>RESIDENCE DIGITAL TWIN</span>
-            <span class="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">3D REPLICA</span>
+            <span class="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">PHOTO-TEXTURED</span>
           </h1>
-          <p class="text-[11px] text-gray-400 font-mono">INTERACTIVE ARCHITECTURAL TOUR</p>
+          <p class="text-[11px] text-gray-400 font-mono">RECONSTRUCTED FROM VIDEO CAPTURE</p>
         </div>
       </div>
 
       <!-- Quick Room Navigation -->
-      <div class="glass-card rounded-2xl p-1.5 flex items-center space-x-1.5 text-xs">
-        <button id="view-dollhouse" class="px-3.5 py-2 rounded-xl font-medium bg-blue-600 text-white shadow-md transition">
+      <div class="glass-ui rounded-2xl p-1.5 flex items-center space-x-1.5 text-xs">
+        <button id="view-dollhouse" class="px-4 py-2 rounded-xl font-medium bg-blue-600 text-white shadow-md transition">
           Dollhouse 3D
         </button>
-        <button id="view-lounge" class="px-3 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
+        <button id="view-lounge" class="px-3.5 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-amber-400"></span>
           <span>Elevated Lounge</span>
         </button>
-        <button id="view-living" class="px-3 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
+        <button id="view-living" class="px-3.5 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-          <span>Living Room</span>
+          <span>Navy Living Room</span>
         </button>
-        <button id="view-dining" class="px-3 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
+        <button id="view-dining" class="px-3.5 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span>Dining Hall</span>
         </button>
-        <button id="view-kitchen" class="px-3 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
+        <button id="view-kitchen" class="px-3.5 py-2 rounded-xl font-medium text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-purple-400"></span>
           <span>Kitchen</span>
         </button>
       </div>
 
-      <!-- Lighting & Camera Controls -->
-      <div class="glass-card rounded-2xl px-3 py-2 flex items-center space-x-2">
-        <button id="btn-cinematic-tour" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-90 text-white shadow-lg transition flex items-center gap-1.5">
+      <!-- Lighting & Tour Controls -->
+      <div class="glass-ui rounded-2xl px-3 py-2 flex items-center space-x-2">
+        <button id="btn-cinematic-tour" class="px-4 py-1.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-90 text-white shadow-lg transition flex items-center gap-1.5">
           <i data-lucide="play" class="w-3.5 h-3.5"></i>
           <span id="tour-label">Cinematic Tour</span>
         </button>
         <div class="h-5 w-[1px] bg-white/10"></div>
+        <button id="btn-toggle-cove" class="px-3 py-1.5 text-xs font-medium rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition flex items-center gap-1.5">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+          <span id="cove-label">LED Step: ON</span>
+        </button>
         <button id="btn-toggle-daylight" class="p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition" title="Toggle Day/Night">
           <i data-lucide="moon" class="w-4 h-4 text-amber-300"></i>
-        </button>
-        <button id="btn-toggle-cove" class="px-3 py-1.5 text-xs font-medium rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition flex items-center gap-1.5" title="Step Cove Light">
-          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-          <span>LED Step: ON</span>
         </button>
       </div>
     </header>
 
-    <!-- Center Interactive Notification / Walkthrough Guide -->
-    <div id="instruction-pill" class="self-center glass-card rounded-full px-5 py-2 text-xs text-gray-300 flex items-center gap-2 transition-opacity duration-700 shadow-xl">
+    <!-- Center Instructional Pill -->
+    <div id="instruction-pill" class="self-center glass-ui rounded-full px-6 py-2 text-xs text-gray-300 flex items-center gap-2.5 transition-opacity duration-700 shadow-2xl">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
       <span>Left-click + drag to orbit • Right-click to pan • Scroll to zoom inside rooms</span>
     </div>
@@ -145,19 +143,19 @@
     <!-- Bottom Interface: Room Features & First-Person Switcher -->
     <footer class="flex items-end justify-between interactive space-x-6">
       <!-- Active Room Specs Card -->
-      <div class="glass-card rounded-2xl p-4 w-80 space-y-2">
+      <div class="glass-ui rounded-2xl p-4 w-84 space-y-2">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
-          <span id="room-badge" class="text-[10px] font-mono uppercase bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30">FEATURE SPOTLIGHT</span>
+          <span id="room-badge" class="text-[10px] font-mono uppercase bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30">REAL TEXTURES APPLIED</span>
           <span class="text-xs text-gray-400 font-mono">SPECIFICATIONS</span>
         </div>
         <h3 id="room-title" class="text-sm font-bold text-white">Apartment Overview</h3>
         <p id="room-desc" class="text-xs text-gray-300 leading-relaxed font-light">
-          Polished white marble hallway with recessed spotlights, elevated wooden study lounge with LED cove step, navy-blue sectional living room, and dining suite.
+          Mapped with photographic textures extracted from your apartment video: warm oak wood floor, navy sofa velvet, window drapery pattern, and marble table surface.
         </p>
       </div>
 
       <!-- Quick Action Deck -->
-      <div class="glass-card rounded-2xl p-3 flex items-center space-x-3">
+      <div class="glass-ui rounded-2xl p-3 flex items-center space-x-3">
         <button id="btn-walk-mode" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-lg transition flex items-center gap-2">
           <i data-lucide="footprints" class="w-4 h-4"></i>
           <span>Walkthrough Mode (WASD)</span>
@@ -172,12 +170,13 @@
       </div>
 
       <!-- Materials Legend -->
-      <div class="glass-card rounded-2xl p-4 w-72 text-xs space-y-2">
-        <span class="text-gray-400 font-mono text-[10px] uppercase block">Architectural Finishes</span>
+      <div class="glass-ui rounded-2xl p-4 w-72 text-xs space-y-2">
+        <span class="text-gray-400 font-mono text-[10px] uppercase block">Video Materials Mapped</span>
         <div class="space-y-1.5 text-[11px] font-mono">
-          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-200 border border-slate-400"></span>White Marble Tiles</span><span class="text-gray-400">Hallway & Dining</span></div>
-          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-700"></span>Oak Wood Parquet</span><span class="text-gray-400">Elevated Lounge</span></div>
-          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-900 border border-blue-700"></span>Navy Velvet Linen</span><span class="text-gray-400">Sectional Sofa</span></div>
+          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-900 border border-blue-500"></span>Navy Velvet</span><span class="text-gray-400">Living Sofa</span></div>
+          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-700"></span>Oak Parquet</span><span class="text-gray-400">Lounge Platform</span></div>
+          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-800"></span>Green Leather</span><span class="text-gray-400">Study Sofa</span></div>
+          <div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-300"></span>Veined Marble</span><span class="text-gray-400">Dining Table</span></div>
         </div>
       </div>
     </footer>
@@ -192,11 +191,11 @@
     // ------------------------------------------------------------------------
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0e131f);
-    scene.fog = new THREE.FogExp2(0x0e131f, 0.015);
+    scene.background = new THREE.Color(0x0a0f1d);
+    scene.fog = new THREE.FogExp2(0x0a0f1d, 0.012);
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(22, 28, 26);
+    camera.position.set(20, 26, 24);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -204,7 +203,7 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.35;
     container.appendChild(renderer.domElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -213,12 +212,32 @@
     controls.maxPolarAngle = Math.PI / 2.05;
     controls.minDistance = 2;
     controls.maxDistance = 65;
-    controls.target.set(0, 1.5, 0);
+    controls.target.set(0, 1.6, 0);
 
     // ------------------------------------------------------------------------
-    // 2. Dynamic Textures (White Marble Veins & Warm Parquet)
+    // 2. Texture Loader: Real Textures Cropped from Your Video
     // ------------------------------------------------------------------------
-    function createMarbleTexture() {
+    const texLoader = new THREE.TextureLoader();
+
+    function loadRepeatTexture(url, repeatX = 1, repeatY = 1) {
+      const tex = texLoader.load(url);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(repeatX, repeatY);
+      return tex;
+    }
+
+    const texNavySofa   = loadRepeatTexture('./textures/navy_sofa.jpg', 2, 2);
+    const texWoodFloor  = loadRepeatTexture('./textures/wood_floor.jpg', 4, 4);
+    const texGreenSofa  = loadRepeatTexture('./textures/green_sofa.jpg', 1.5, 1.5);
+    const texMarble     = loadRepeatTexture('./textures/marble_table.jpg', 1, 1);
+    const texCurtains   = loadRepeatTexture('./textures/curtains.jpg', 2, 1);
+    const texCredenza   = loadRepeatTexture('./textures/credenza.jpg', 1, 1);
+    const texDoor       = loadRepeatTexture('./textures/oak_door.jpg', 1, 1);
+    const texWallTiles  = loadRepeatTexture('./textures/wall_tiles.jpg', 3, 2);
+
+    // Procedural Hallway Marble Tile Texture
+    function createPolishedFloorTexture() {
       const cv = document.createElement('canvas');
       cv.width = 512;
       cv.height = 512;
@@ -226,28 +245,27 @@
       ctx.fillStyle = '#f8fafc';
       ctx.fillRect(0, 0, 512, 512);
 
-      // Subtle light grey veining
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      // Light grey veining
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
       ctx.lineWidth = 3;
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 7; i++) {
         ctx.beginPath();
         let x = Math.random() * 512;
         let y = 0;
         ctx.moveTo(x, y);
         while (y < 512) {
           x += (Math.random() - 0.5) * 60;
-          y += Math.random() * 80;
+          y += Math.random() * 70;
           ctx.lineTo(x, y);
         }
         ctx.stroke();
       }
-
-      // Tile grid lines
-      ctx.strokeStyle = 'rgba(203, 213, 225, 0.5)';
+      ctx.strokeStyle = 'rgba(203, 213, 225, 0.55)';
       ctx.lineWidth = 2;
-      ctx.strokeRect(0, 0, 512, 512);
-      ctx.strokeRect(256, 0, 256, 512);
-      ctx.strokeRect(0, 256, 512, 256);
+      ctx.strokeRect(0, 0, 256, 256);
+      ctx.strokeRect(256, 0, 256, 256);
+      ctx.strokeRect(0, 256, 256, 256);
+      ctx.strokeRect(256, 256, 256, 256);
 
       const tex = new THREE.CanvasTexture(cv);
       tex.wrapS = THREE.RepeatWrapping;
@@ -255,39 +273,12 @@
       tex.repeat.set(4, 4);
       return tex;
     }
-
-    function createWoodTexture() {
-      const cv = document.createElement('canvas');
-      cv.width = 512;
-      cv.height = 512;
-      const ctx = cv.getContext('2d');
-      ctx.fillStyle = '#b45309'; // Warm golden honey oak
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Wood plank grains
-      ctx.fillStyle = 'rgba(120, 53, 15, 0.2)';
-      for (let i = 0; i < 512; i += 64) {
-        ctx.fillRect(0, i, 512, 3);
-      }
-      for (let j = 0; j < 400; j++) {
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.08)';
-        ctx.fillRect(Math.random() * 512, Math.random() * 512, Math.random() * 80, 2);
-      }
-
-      const tex = new THREE.CanvasTexture(cv);
-      tex.wrapS = THREE.RepeatWrapping;
-      tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(3, 3);
-      return tex;
-    }
-
-    const marbleTex = createMarbleTexture();
-    const woodTex = createWoodTexture();
+    const texPolishedFloor = createPolishedFloorTexture();
 
     // ------------------------------------------------------------------------
-    // 3. Lighting (Sunlight, Recessed Spotlights & LED Step Cove)
+    // 3. Lighting Setup (Warm Architectural Incandescent & LED Cove)
     // ------------------------------------------------------------------------
-    const ambientLight = new THREE.AmbientLight(0xfff7ed, 0.9);
+    const ambientLight = new THREE.AmbientLight(0xfff7ed, 0.95);
     scene.add(ambientLight);
 
     const sunLight = new THREE.DirectionalLight(0xffedd5, 1.6);
@@ -305,71 +296,67 @@
     sunLight.shadow.bias = -0.0005;
     scene.add(sunLight);
 
-    // Warm Spotlights inside rooms
-    function addCeilingSpot(x, y, z, color = 0xffedd5, intensity = 1.0, dist = 16) {
+    function addCeilingSpot(x, y, z, color = 0xfffbeb, intensity = 1.3, dist = 16) {
       const spot = new THREE.PointLight(color, intensity, dist);
       spot.position.set(x, y, z);
       scene.add(spot);
 
-      // Recessed fixture geometry
-      const fix = new THREE.Mesh(
+      const fixture = new THREE.Mesh(
         new THREE.CylinderGeometry(0.2, 0.2, 0.05, 16),
         new THREE.MeshBasicMaterial({ color: 0xffffff })
       );
-      fix.position.set(x, y + 0.02, z);
-      scene.add(fix);
+      fixture.position.set(x, y + 0.02, z);
+      scene.add(fixture);
       return spot;
     }
 
-    // Spotlights across ceiling
     addCeilingSpot(0, 5.8, 5, 0xffedd5, 1.2);    // Hallway
-    addCeilingSpot(5, 5.8, 4, 0xffedd5, 1.4);    // Dining
-    addCeilingSpot(-7, 5.8, 5, 0xfde68a, 1.4);   // Elevated Lounge
-    addCeilingSpot(6, 5.8, -6, 0xffedd5, 1.4);   // Living Room
-    addCeilingSpot(-7, 5.8, -6, 0xffffff, 1.2);  // Kitchen
-    addCeilingSpot(0, 4.5, 12.5, 0xffedd5, 1.5); // Vanity basin
+    addCeilingSpot(5, 5.8, 4.5, 0xffedd5, 1.4);  // Dining
+    addCeilingSpot(-7.5, 5.8, 5, 0xfde68a, 1.5); // Elevated Lounge
+    addCeilingSpot(6, 5.8, -6, 0xffedd5, 1.5);   // Living Room
+    addCeilingSpot(-7.5, 5.8, -6, 0xffffff, 1.2);// Kitchen
+    addCeilingSpot(0, 4.8, 12.5, 0xffedd5, 1.5); // Vanity mirror
 
-    // The Signature Feature: Under-step Glowing Amber LED Cove Light
-    const coveLight = new THREE.PointLight(0xfbbf24, 2.5, 7.5);
-    coveLight.position.set(-3.2, 0.15, 5.0);
+    // Golden Amber LED Cove Step Light
+    const coveLight = new THREE.PointLight(0xfbbf24, 2.8, 8.0);
+    coveLight.position.set(-3.2, 0.16, 5.0);
     scene.add(coveLight);
 
-    // Glowing mesh strip under the step
     const coveStrip = new THREE.Mesh(
-      new THREE.BoxGeometry(0.1, 0.06, 9.6),
+      new THREE.BoxGeometry(0.12, 0.06, 9.8),
       new THREE.MeshBasicMaterial({ color: 0xfbbf24 })
     );
     coveStrip.position.set(-3.05, 0.22, 5.0);
     scene.add(coveStrip);
 
     // ------------------------------------------------------------------------
-    // 4. Architectural Building Construction
+    // 4. Architecture & Room Construction
     // ------------------------------------------------------------------------
     const aptGroup = new THREE.Group();
 
-    // Main Apartment White Marble Floor
-    const marbleMat = new THREE.MeshStandardMaterial({
-      map: marbleTex,
-      roughness: 0.2,
-      metalness: 0.1
+    // Main Polished Marble Floor
+    const floorMat = new THREE.MeshStandardMaterial({
+      map: texPolishedFloor,
+      roughness: 0.18,
+      metalness: 0.15
     });
-    const mainFloor = new THREE.Mesh(new THREE.PlaneGeometry(28, 28), marbleMat);
+    const mainFloor = new THREE.Mesh(new THREE.PlaneGeometry(28, 28), floorMat);
     mainFloor.rotation.x = -Math.PI / 2;
     mainFloor.receiveShadow = true;
     aptGroup.add(mainFloor);
 
-    // Exterior Foundation Ground Pad
-    const groundPad = new THREE.Mesh(
+    // Dark exterior pad
+    const pad = new THREE.Mesh(
       new THREE.PlaneGeometry(50, 50),
-      new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.95 })
+      new THREE.MeshStandardMaterial({ color: 0x060911, roughness: 0.95 })
     );
-    groundPad.rotation.x = -Math.PI / 2;
-    groundPad.position.y = -0.05;
-    groundPad.receiveShadow = true;
-    scene.add(groundPad);
+    pad.rotation.x = -Math.PI / 2;
+    pad.position.y = -0.05;
+    pad.receiveShadow = true;
+    scene.add(pad);
 
-    // Walls Material (Modern Off-White / Pale Cream)
-    const wallMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.85 });
+    // Walls Material
+    const wallMat = new THREE.MeshStandardMaterial({ color: 0xf3f4f6, roughness: 0.85 });
 
     function createWall(x, z, w, d, h = 6, y = 3) {
       const wall = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMat);
@@ -380,94 +367,107 @@
       return wall;
     }
 
-    // Outer Cutaway Walls (Height = 6, with lower front sections for dollhouse view)
     createWall(0, -14, 28, 0.4);   // Back wall
     createWall(-14, 0, 0.4, 28);   // Left wall
     createWall(14, 0, 0.4, 28);    // Right wall
     createWall(0, 14, 28, 0.4);    // Front entrance wall
 
-    // Internal Dividing Partition Walls
-    createWall(0, -7, 0.4, 14);    // Divides Kitchen from Living Room
-    createWall(-8, 0, 12, 0.4);    // Divides Kitchen from Elevated Lounge
-    createWall(7, 0, 14, 0.4);     // Divides Living from Dining Area
+    createWall(0, -7, 0.4, 14);    // Kitchen / Living dividing wall
+    createWall(-8, 0, 12, 0.4);    // Kitchen / Elevated Lounge wall
+    createWall(7, 0, 14, 0.4);     // Living / Dining dividing wall
+
+    // Doors with actual Oak Wood Texture
+    function createWoodDoor(x, z, rotY = 0) {
+      const doorMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1.6, 4.4, 0.1),
+        new THREE.MeshStandardMaterial({ map: texDoor, roughness: 0.35 })
+      );
+      doorMesh.position.set(x, 2.2, z);
+      doorMesh.rotation.y = rotY;
+      doorMesh.castShadow = true;
+
+      // Chrome cylindrical door knob
+      const knob = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.06, 0.06, 0.14, 16),
+        new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95, roughness: 0.1 })
+      );
+      knob.rotation.x = Math.PI / 2;
+      knob.position.set(0.6, 0, 0.08);
+      doorMesh.add(knob);
+
+      aptGroup.add(doorMesh);
+    }
+    createWoodDoor(0.0, -1.8, Math.PI / 2);
+    createWoodDoor(7.0, -1.8, Math.PI / 2);
 
     // ------------------------------------------------------------------------
-    // 5. Room 1: Elevated Lounge / Study Room (With Under-Step LED Glow)
+    // 5. Room 1: Elevated Lounge (Warm Parquet & Real Green Leather Sofa)
     // ------------------------------------------------------------------------
     const loungeGroup = new THREE.Group();
 
-    // Raised Floor Platform (y = 0.45)
-    const woodFloorMat = new THREE.MeshStandardMaterial({
-      map: woodTex,
-      roughness: 0.35,
+    // Raised Floor Platform with Real Wood Parquet
+    const woodPlatformMat = new THREE.MeshStandardMaterial({
+      map: texWoodFloor,
+      roughness: 0.3,
       metalness: 0.05
     });
-    const platform = new THREE.Mesh(new THREE.BoxGeometry(10.5, 0.45, 10), woodFloorMat);
+    const platform = new THREE.Mesh(new THREE.BoxGeometry(10.5, 0.45, 10), woodPlatformMat);
     platform.position.set(-8.5, 0.225, 5.0);
     platform.receiveShadow = true;
     platform.castShadow = true;
     loungeGroup.add(platform);
 
-    // Step Riser Trim with Overhang Lip
+    // Step Trim
     const stepLip = new THREE.Mesh(
       new THREE.BoxGeometry(0.2, 0.08, 10),
-      new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.3 })
+      new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.3 })
     );
     stepLip.position.set(-3.15, 0.42, 5.0);
     loungeGroup.add(stepLip);
 
-    // White Folding French Glass Door
+    // French Glass Folding Doors
     function createFrenchDoor(x, z, rotY = 0) {
-      const doorGroup = new THREE.Group();
-      doorGroup.position.set(x, 0.45, z);
-      doorGroup.rotation.y = rotY;
+      const dg = new THREE.Group();
+      dg.position.set(x, 0.45, z);
+      dg.rotation.y = rotY;
 
-      const frameMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 });
-      const glassMat = new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.3,
-        roughness: 0.1,
-        transmission: 0.9
-      });
-
-      // Frame
-      const frame = new THREE.Mesh(new THREE.BoxGeometry(0.2, 4.8, 1.8), frameMat);
+      const frame = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 4.8, 1.8),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 })
+      );
       frame.position.y = 2.4;
-      doorGroup.add(frame);
+      dg.add(frame);
 
-      // Glass Inset
-      const glass = new THREE.Mesh(new THREE.BoxGeometry(0.08, 4.4, 1.5), glassMat);
+      const glass = new THREE.Mesh(
+        new THREE.BoxGeometry(0.08, 4.4, 1.5),
+        new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.35, roughness: 0.1, transmission: 0.9 })
+      );
       glass.position.y = 2.4;
-      doorGroup.add(glass);
+      dg.add(glass);
 
-      // Horizontal dividers
       for (let gy of [1.2, 2.4, 3.6]) {
-        const div = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.08, 1.5), frameMat);
+        const div = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.08, 1.5), new THREE.MeshStandardMaterial({ color: 0xffffff }));
         div.position.y = gy;
-        doorGroup.add(div);
+        dg.add(div);
       }
-      return doorGroup;
+      return dg;
     }
+    loungeGroup.add(createFrenchDoor(-3.2, 1.8, -0.4));
+    loungeGroup.add(createFrenchDoor(-3.2, 8.2, 0.3));
 
-    const door1 = createFrenchDoor(-3.2, 1.8, -0.4);
-    const door2 = createFrenchDoor(-3.2, 8.2, 0.3);
-    loungeGroup.add(door1);
-    loungeGroup.add(door2);
+    // Green Leather Lounge Sofa (With actual cropped texture)
+    const greenSofaMat = new THREE.MeshStandardMaterial({ map: texGreenSofa, roughness: 0.4, metalness: 0.1 });
+    const gSeat = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.6, 6.2), greenSofaMat);
+    gSeat.position.set(-12.4, 0.45 + 0.4, 5.0);
+    gSeat.castShadow = true;
+    loungeGroup.add(gSeat);
 
-    // Dark Green Leather Sofa
-    const sofaMat = new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.4, metalness: 0.1 });
-    const sofaSeat = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.6, 6.2), sofaMat);
-    sofaSeat.position.set(-12.4, 0.45 + 0.4, 5.0);
-    sofaSeat.castShadow = true;
-    loungeGroup.add(sofaSeat);
+    const gBack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.4, 6.2), greenSofaMat);
+    gBack.position.set(-13.6, 0.45 + 1.1, 5.0);
+    gBack.castShadow = true;
+    loungeGroup.add(gBack);
 
-    const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.4, 6.2), sofaMat);
-    sofaBack.position.set(-13.6, 0.45 + 1.1, 5.0);
-    sofaBack.castShadow = true;
-    loungeGroup.add(sofaBack);
-
-    // Window with Striped Curtains and Built-in Bench
+    // Window Bench with Striped Curtains
     const bench = new THREE.Mesh(
       new THREE.BoxGeometry(7.0, 0.5, 1.4),
       new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.6 })
@@ -475,9 +475,16 @@
     bench.position.set(-8.5, 0.45 + 0.25, 9.3);
     loungeGroup.add(bench);
 
+    const loungeCurtain = new THREE.Mesh(
+      new THREE.BoxGeometry(6.6, 4.8, 0.15),
+      new THREE.MeshStandardMaterial({ map: texCurtains, roughness: 0.85 })
+    );
+    loungeCurtain.position.set(-8.5, 0.45 + 2.8, 9.8);
+    loungeGroup.add(loungeCurtain);
+
     // Split AC Unit on Bulkhead
     const acUnit = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.6, 2.0),
+      new THREE.BoxGeometry(0.5, 0.6, 2.2),
       new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 })
     );
     acUnit.position.set(-13.6, 5.0, 5.0);
@@ -486,76 +493,79 @@
     aptGroup.add(loungeGroup);
 
     // ------------------------------------------------------------------------
-    // 6. Room 2: Main Living Room (With Deep Navy Blue Sectional Sofa)
+    // 6. Room 2: Main Living Room (Real Navy Velvet Fabric & Curtains)
     // ------------------------------------------------------------------------
     const livingGroup = new THREE.Group();
 
-    // Deep Navy Sectional Sofa
-    const navySofaMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.7 });
-    
-    // Main sofa section
-    const mainSofa = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.65, 6.4), navySofaMat);
-    mainSofa.position.set(6.0, 0.4, -9.0);
+    // Sectional Sofa with Actual Navy Velvet Texture
+    const navyMat = new THREE.MeshStandardMaterial({ map: texNavySofa, roughness: 0.6 });
+
+    // Main sofa body
+    const mainSofa = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.7, 6.6), navyMat);
+    mainSofa.position.set(6.0, 0.45, -9.0);
     mainSofa.castShadow = true;
     livingGroup.add(mainSofa);
 
-    // L-Section extension (chaise lounge)
-    const lSection = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.65, 2.4), navySofaMat);
-    lSection.position.set(3.4, 0.4, -11.0);
-    lSection.castShadow = true;
-    livingGroup.add(lSection);
+    // Chaise section
+    const chaise = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.7, 2.5), navyMat);
+    chaise.position.set(3.4, 0.45, -11.0);
+    chaise.castShadow = true;
+    livingGroup.add(chaise);
 
-    // Sofa Backrest
-    const livingBack = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.4, 6.4), navySofaMat);
-    livingBack.position.set(7.2, 1.1, -9.0);
+    // Sofa backrest
+    const livingBack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.4, 6.6), navyMat);
+    livingBack.position.set(7.2, 1.15, -9.0);
     livingBack.castShadow = true;
     livingGroup.add(livingBack);
 
-    // Cream & Navy Accent Pillows
+    // Accent Pillows
     const pillowMat = new THREE.MeshStandardMaterial({ color: 0xfef3c7, roughness: 0.8 });
     for (let pz of [-11, -9.5, -8, -6.5]) {
-      const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.6, 0.9), pillowMat);
-      pillow.position.set(6.8, 0.95, pz);
+      const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.65, 0.9), pillowMat);
+      pillow.position.set(6.8, 1.05, pz);
       pillow.rotation.y = (Math.random() - 0.5) * 0.2;
       livingGroup.add(pillow);
     }
 
+    // Floor-to-Ceiling Curtains with Actual Texture Pattern
+    const mainCurtain = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 5.6, 8.4),
+      new THREE.MeshStandardMaterial({ map: texCurtains, roughness: 0.85 })
+    );
+    mainCurtain.position.set(13.6, 2.8, -7.0);
+    livingGroup.add(mainCurtain);
+
     // Modern Coffee Table
     const tableTop = new THREE.Mesh(
-      new THREE.BoxGeometry(2.2, 0.1, 4.0),
-      new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.2, metalness: 0.6 })
+      new THREE.BoxGeometry(2.2, 0.12, 4.0),
+      new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.5 })
     );
     tableTop.position.set(2.5, 0.5, -7.5);
+    tableTop.castShadow = true;
     livingGroup.add(tableTop);
-
-    // Floor-to-Ceiling Curtains on the Window Wall
-    const curtainMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.9 });
-    const curtain = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5.6, 8.0), curtainMat);
-    curtain.position.set(13.6, 2.8, -7.0);
-    livingGroup.add(curtain);
 
     aptGroup.add(livingGroup);
 
     // ------------------------------------------------------------------------
-    // 7. Room 3: Dining Area & Hallway Credenza
+    // 7. Room 3: Dining Area & Real Marble Table
     // ------------------------------------------------------------------------
     const diningGroup = new THREE.Group();
 
-    // Marble Top Dining Table
+    // Dining Table with Real Marble Texture
     const dTable = new THREE.Mesh(
-      new THREE.BoxGeometry(3.0, 0.12, 5.4),
-      new THREE.MeshStandardMaterial({ map: marbleTex, roughness: 0.2, metalness: 0.1 })
+      new THREE.BoxGeometry(3.2, 0.12, 5.6),
+      new THREE.MeshStandardMaterial({ map: texMarble, roughness: 0.2, metalness: 0.15 })
     );
     dTable.position.set(5.5, 1.5, 4.5);
     dTable.castShadow = true;
     diningGroup.add(dTable);
 
-    // Table legs
-    for (let lx of [4.3, 6.7]) {
-      for (let lz of [2.2, 6.8]) {
+    // Black metal legs
+    for (let lx of [4.2, 6.8]) {
+      for (let lz of [2.1, 6.9]) {
         const leg = new THREE.Mesh(
           new THREE.CylinderGeometry(0.08, 0.08, 1.5),
-          new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8 })
+          new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.9 })
         );
         leg.position.set(lx, 0.75, lz);
         leg.castShadow = true;
@@ -563,23 +573,23 @@
       }
     }
 
-    // 4 Modern Upholstered Dining Chairs
-    const chairMat = new THREE.MeshStandardMaterial({ color: 0x374151, roughness: 0.6 });
+    // 4 Modern Grey Upholstered Chairs
+    const chairMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
     function createChair(x, z, rotY) {
       const ch = new THREE.Group();
       ch.position.set(x, 0, z);
       ch.rotation.y = rotY;
 
-      const seat = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.1, 1.0), chairMat);
+      const seat = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.1, 1.1), chairMat);
       seat.position.y = 0.9;
       ch.add(seat);
 
-      const back = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.9, 0.1), chairMat);
-      back.position.set(0, 1.35, -0.45);
+      const back = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.95, 0.1), chairMat);
+      back.position.set(0, 1.35, -0.5);
       ch.add(back);
 
-      for (let cx of [-0.4, 0.4]) {
-        for (let cz of [-0.4, 0.4]) {
+      for (let cx of [-0.45, 0.45]) {
+        for (let cz of [-0.45, 0.45]) {
           const cl = new THREE.Mesh(
             new THREE.CylinderGeometry(0.04, 0.04, 0.9),
             new THREE.MeshStandardMaterial({ color: 0x111827 })
@@ -590,55 +600,74 @@
       }
       return ch;
     }
+    diningGroup.add(createChair(3.7, 3.6, Math.PI / 2));
+    diningGroup.add(createChair(3.7, 5.4, Math.PI / 2));
+    diningGroup.add(createChair(7.3, 3.6, -Math.PI / 2));
+    diningGroup.add(createChair(7.3, 5.4, -Math.PI / 2));
 
-    diningGroup.add(createChair(3.8, 3.6, Math.PI / 2));
-    diningGroup.add(createChair(3.8, 5.4, Math.PI / 2));
-    diningGroup.add(createChair(7.2, 3.6, -Math.PI / 2));
-    diningGroup.add(createChair(7.2, 5.4, -Math.PI / 2));
-
-    // Large Crockery Cabinet / Credenza on Right Wall
+    // Large Display Credenza / Crockery Unit with Real Texture
     const credenza = new THREE.Mesh(
-      new THREE.BoxGeometry(1.0, 4.2, 6.0),
-      new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.3, roughness: 0.5 })
+      new THREE.BoxGeometry(1.0, 4.4, 6.2),
+      new THREE.MeshStandardMaterial({ map: texCredenza, roughness: 0.4 })
     );
-    credenza.position.set(13.4, 2.1, 4.5);
+    credenza.position.set(13.4, 2.2, 4.5);
     credenza.castShadow = true;
     diningGroup.add(credenza);
 
-    // Glass display doors on credenza
     const credenzaGlass = new THREE.Mesh(
-      new THREE.BoxGeometry(0.1, 2.4, 5.6),
-      new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, roughness: 0.1 })
+      new THREE.BoxGeometry(0.08, 2.5, 5.8),
+      new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, roughness: 0.1, transmission: 0.9 })
     );
-    credenzaGlass.position.set(12.8, 2.7, 4.5);
+    credenzaGlass.position.set(12.8, 2.8, 4.5);
     diningGroup.add(credenzaGlass);
 
     aptGroup.add(diningGroup);
 
     // ------------------------------------------------------------------------
-    // 8. Vanity & Washbasin at Hallway End
+    // 8. Room 4: Kitchen with Real Wall Tile Borders
+    // ------------------------------------------------------------------------
+    const kitchenGroup = new THREE.Group();
+
+    // Tiled Kitchen Walls
+    const kWallMat = new THREE.MeshStandardMaterial({ map: texWallTiles, roughness: 0.3 });
+    const kBackWall = new THREE.Mesh(new THREE.BoxGeometry(13.6, 5.8, 0.1), kWallMat);
+    kBackWall.position.set(-7.0, 2.9, -13.8);
+    kitchenGroup.add(kBackWall);
+
+    // Dark Granite Countertop
+    const graniteCounter = new THREE.Mesh(
+      new THREE.BoxGeometry(2.4, 1.8, 9.0),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.15, metalness: 0.4 })
+    );
+    graniteCounter.position.set(-12.6, 0.9, -8.0);
+    graniteCounter.castShadow = true;
+    kitchenGroup.add(graniteCounter);
+
+    aptGroup.add(kitchenGroup);
+
+    // ------------------------------------------------------------------------
+    // 9. Hallway Vanity & Washbasin
     // ------------------------------------------------------------------------
     const vanityGroup = new THREE.Group();
     vanityGroup.position.set(0, 0, 13.2);
 
     const basin = new THREE.Mesh(
-      new THREE.BoxGeometry(1.8, 0.3, 1.2),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 })
+      new THREE.BoxGeometry(1.8, 0.35, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.08 })
     );
     basin.position.set(0, 1.8, 0);
     vanityGroup.add(basin);
 
     const pedestal = new THREE.Mesh(
       new THREE.CylinderGeometry(0.2, 0.2, 1.8),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 })
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.08 })
     );
     pedestal.position.set(0, 0.9, 0);
     vanityGroup.add(pedestal);
 
-    // Wall Mirror
     const mirror = new THREE.Mesh(
-      new THREE.BoxGeometry(1.8, 2.5, 0.05),
-      new THREE.MeshStandardMaterial({ color: 0x93c5fd, metalness: 0.95, roughness: 0.05 })
+      new THREE.BoxGeometry(1.8, 2.6, 0.05),
+      new THREE.MeshStandardMaterial({ color: 0x93c5fd, metalness: 0.95, roughness: 0.02 })
     );
     mirror.position.set(0, 3.4, 0.65);
     vanityGroup.add(mirror);
@@ -646,61 +675,58 @@
     aptGroup.add(vanityGroup);
 
     // ------------------------------------------------------------------------
-    // 9. Spinning Ceiling Fans
+    // 10. Ceiling Fans
     // ------------------------------------------------------------------------
     const ceilingFans = [];
     function createCeilingFan(x, y, z) {
-      const fanGroup = new THREE.Group();
-      fanGroup.position.set(x, y, z);
+      const fg = new THREE.Group();
+      fg.position.set(x, y, z);
 
-      // Downrod & motor
       const rod = new THREE.Mesh(
         new THREE.CylinderGeometry(0.06, 0.06, 1.2),
         new THREE.MeshStandardMaterial({ color: 0xffffff })
       );
       rod.position.y = 0.6;
-      fanGroup.add(rod);
+      fg.add(rod);
 
       const motor = new THREE.Mesh(
         new THREE.CylinderGeometry(0.4, 0.4, 0.25, 16),
         new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 })
       );
-      fanGroup.add(motor);
+      fg.add(motor);
 
-      // Rotor with 3 Blades
       const rotor = new THREE.Group();
       for (let i = 0; i < 3; i++) {
         const blade = new THREE.Mesh(
-          new THREE.BoxGeometry(0.25, 0.03, 1.8),
+          new THREE.BoxGeometry(0.25, 0.03, 1.9),
           new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 })
         );
-        blade.position.z = 0.9;
+        blade.position.z = 0.95;
         blade.rotation.x = 0.1;
-        const bladeArm = new THREE.Group();
-        bladeArm.rotation.y = (i * Math.PI * 2) / 3;
-        bladeArm.add(blade);
-        rotor.add(bladeArm);
+        const arm = new THREE.Group();
+        arm.rotation.y = (i * Math.PI * 2) / 3;
+        arm.add(blade);
+        rotor.add(arm);
       }
-      fanGroup.add(rotor);
-      scene.add(fanGroup);
+      fg.add(rotor);
+      scene.add(fg);
       ceilingFans.push(rotor);
     }
-
-    createCeilingFan(5, 5.4, 4.5);   // Dining Fan
-    createCeilingFan(-8, 5.4, 5.0);  // Elevated Lounge Fan
+    createCeilingFan(5, 5.4, 4.5);
+    createCeilingFan(-8, 5.4, 5.0);
 
     scene.add(aptGroup);
 
     // ------------------------------------------------------------------------
-    // 10. Automated Guided Cinematic Tour Waypoints
+    // 11. Cinematic Guided Tour
     // ------------------------------------------------------------------------
     const TOUR_POINTS = [
-      { name: "Hallway Entry", pos: [0, 4.5, 12], look: [0, 1.8, 0], desc: "Viewing the polished white marble hallway toward the dining suite." },
-      { name: "Elevated Lounge", pos: [-4, 2.8, 5], look: [-8.5, 1.2, 5], desc: "Stepping up onto the warm wooden platform with the glowing amber LED cove light." },
-      { name: "Green Leather Lounge", pos: [-6, 2.2, 7.5], look: [-12, 1.5, 5], desc: "Inside the lounge: dark green sofa, window bench, and folding glass French doors." },
-      { name: "Dining Hall", pos: [3.5, 2.5, 1.5], look: [5.5, 1.5, 4.5], desc: "The dining area featuring a marble-topped table and modern credenza unit." },
-      { name: "Main Living Room", pos: [2.5, 2.5, -4], look: [6.0, 1.2, -9.0], desc: "Main living room featuring the deep navy-blue L-shaped sectional sofa." },
-      { name: "Dollhouse 3D", pos: [22, 28, 26], look: [0, 1.5, 0], desc: "Full architectural cutaway overview of the complete apartment layout." }
+      { name: "Marble Corridor", pos: [0, 4.5, 12], look: [0, 1.8, 0], desc: "Viewing the polished white marble hallway toward the dining suite." },
+      { name: "Elevated Lounge", pos: [-3.8, 2.6, 5], look: [-8.5, 1.2, 5], desc: "Stepping up to the warm oak parquet platform with golden under-step LED lighting." },
+      { name: "Green Leather Lounge", pos: [-6, 2.2, 7.5], look: [-12.4, 1.5, 5], desc: "Real green leather sofa texture, window bench seating, and folding French doors." },
+      { name: "Dining Hall", pos: [3.5, 2.5, 1.5], look: [5.5, 1.5, 4.5], desc: "Dining table mapped with your real marble texture, grey chairs, and credenza." },
+      { name: "Navy Living Room", pos: [2.5, 2.5, -4], look: [6.0, 1.2, -9.0], desc: "Deep navy-blue L-shaped sectional sofa with real velvet fabric texture and pleated curtains." },
+      { name: "Dollhouse 3D", pos: [20, 26, 24], look: [0, 1.6, 0], desc: "Full architectural cutaway overview with all photo-mapped materials." }
     ];
 
     let tourActive = false;
@@ -735,7 +761,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // 11. UI Event Handlers & Camera Navigation
+    // 12. UI Controls & Smooth Camera Motion
     // ------------------------------------------------------------------------
     let targetCamPos = null;
     let targetLookAt = null;
@@ -752,61 +778,61 @@
 
     document.getElementById('view-dollhouse').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(22, 28, 26, 0, 1.5, 0, "Dollhouse 3D Overview", "Complete layout cutaway showing all rooms, finishes, and architectural partitions.");
+      smoothCameraTo(20, 26, 24, 0, 1.6, 0, "Dollhouse 3D Overview", "Complete layout cutaway with authentic photo-textures from your video.");
     });
 
     document.getElementById('view-lounge').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(-3.5, 2.5, 5, -8.5, 1.2, 5, "Elevated Wooden Lounge", "Featuring rich oak parquet flooring, under-step LED cove lighting, and green leather sofa.");
+      smoothCameraTo(-3.5, 2.5, 5, -8.5, 1.2, 5, "Elevated Wooden Lounge", "Warm oak parquet floor with glowing golden under-step LED cove light and green sofa.");
     });
 
     document.getElementById('view-living').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(2.5, 2.8, -4, 6.0, 1.2, -9.0, "Main Living Room", "Featuring the deep navy-blue L-shaped sectional sofa with accent cushions and sheer curtains.");
+      smoothCameraTo(2.5, 2.8, -4, 6.0, 1.2, -9.0, "Navy Living Room", "Deep navy-blue sectional sofa mapped with your actual sofa fabric texture.");
     });
 
     document.getElementById('view-dining').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(2.5, 2.8, 1.5, 5.5, 1.5, 4.5, "Dining Hall", "Marble-topped dining suite, modern grey dining chairs, and display credenza.");
+      smoothCameraTo(2.5, 2.8, 1.5, 5.5, 1.5, 4.5, "Dining Hall", "Marble table with your actual marble surface texture, modern chairs, and credenza.");
     });
 
     document.getElementById('view-kitchen').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(-3.5, 2.8, -3.5, -8.0, 1.5, -7.0, "Kitchen Area", "Granite countertops, patterned wall border tile accents, and modern oak veneer doors.");
+      smoothCameraTo(-3.5, 2.8, -3.5, -8.0, 1.5, -7.0, "Kitchen Area", "Granite countertops, patterned wall tile accents, and modern oak veneer doors.");
     });
 
     document.getElementById('btn-reset-view').addEventListener('click', () => {
       stopCinematicTour();
-      smoothCameraTo(22, 28, 26, 0, 1.5, 0);
+      smoothCameraTo(20, 26, 24, 0, 1.6, 0);
     });
 
-    // Toggle Under-Step Cove LED Light
+    // Toggle Cove LED Step
     let coveActive = true;
     document.getElementById('btn-toggle-cove').addEventListener('click', (e) => {
       coveActive = !coveActive;
-      coveLight.intensity = coveActive ? 2.5 : 0;
+      coveLight.intensity = coveActive ? 2.8 : 0;
       coveStrip.material.color.set(coveActive ? 0xfbbf24 : 0x475569);
-      e.target.querySelector('span').textContent = `LED Step: ${coveActive ? 'ON' : 'OFF'}`;
+      document.getElementById('cove-label').textContent = `LED Step: ${coveActive ? 'ON' : 'OFF'}`;
     });
 
-    // Day / Night Atmosphere Toggle
+    // Toggle Day/Night
     let isDaylight = true;
     document.getElementById('btn-toggle-daylight').addEventListener('click', () => {
       isDaylight = !isDaylight;
       if (isDaylight) {
-        scene.background.set(0x0e131f);
-        scene.fog.color.set(0x0e131f);
+        scene.background.set(0x0a0f1d);
+        scene.fog.color.set(0x0a0f1d);
         sunLight.intensity = 1.6;
-        ambientLight.intensity = 0.9;
+        ambientLight.intensity = 0.95;
       } else {
-        scene.background.set(0x030712);
-        scene.fog.color.set(0x030712);
+        scene.background.set(0x020617);
+        scene.fog.color.set(0x020617);
         sunLight.intensity = 0.2;
         ambientLight.intensity = 0.35;
       }
     });
 
-    // Toggle Ceiling Fans
+    // Toggle Fans
     let fansSpinning = true;
     document.getElementById('btn-toggle-fans').addEventListener('click', (e) => {
       fansSpinning = !fansSpinning;
@@ -814,7 +840,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // 12. First-Person Walkthrough Mode
+    // 13. Walkthrough Mode (WASD)
     // ------------------------------------------------------------------------
     let walkMode = false;
     const walkKeys = { forward: false, backward: false, left: false, right: false };
@@ -846,19 +872,19 @@
         reticle.classList.remove('hidden');
         camera.position.set(0, 2.0, 10);
         controls.target.set(0, 2.0, 0);
-        document.getElementById('instruction-pill').textContent = "Use W, A, S, D to walk through rooms • Drag mouse to look around";
+        document.getElementById('instruction-pill').textContent = "Use W, A, S, D to walk • Drag mouse to look around";
       } else {
         btn.classList.add('bg-emerald-600');
         btn.classList.remove('bg-rose-600');
         btn.querySelector('span').textContent = 'Walkthrough Mode (WASD)';
         reticle.classList.add('hidden');
-        smoothCameraTo(22, 28, 26, 0, 1.5, 0);
+        smoothCameraTo(20, 26, 24, 0, 1.6, 0);
         document.getElementById('instruction-pill').textContent = "Left-click + drag to orbit • Right-click to pan • Scroll to zoom";
       }
     });
 
     // ------------------------------------------------------------------------
-    // 13. Main Animation Loop
+    // 14. Main Animation Loop
     // ------------------------------------------------------------------------
     const clock = new THREE.Clock();
 
@@ -866,12 +892,10 @@
       requestAnimationFrame(animate);
       const delta = clock.getDelta();
 
-      // Spin ceiling fans
       if (fansSpinning) {
         ceilingFans.forEach(f => f.rotation.y += delta * 5.0);
       }
 
-      // Smooth camera interpolation
       if (targetCamPos) {
         camera.position.lerp(targetCamPos, 0.05);
         controls.target.lerp(targetLookAt, 0.05);
@@ -880,7 +904,6 @@
         }
       }
 
-      // First-person Walk Controls
       if (walkMode) {
         const speed = 7.0 * delta;
         const dir = new THREE.Vector3();
@@ -907,10 +930,9 @@
           controls.target.addScaledVector(side, speed);
         }
 
-        // Room boundaries clamp
         camera.position.x = THREE.MathUtils.clamp(camera.position.x, -12, 12);
         camera.position.z = THREE.MathUtils.clamp(camera.position.z, -12, 12);
-        camera.position.y = 2.0; // Eye level
+        camera.position.y = 2.0;
         controls.target.y = 2.0;
       }
 
